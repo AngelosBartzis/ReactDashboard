@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
 import {
   Box,
   Drawer,
@@ -17,11 +17,11 @@ import SettingsIcon from '@mui/icons-material/Settings';
 const DRAWER_WIDTH = 240;
 
 const navItems = [
-  { label: 'Overview', icon: <DashboardIcon /> },
-  { label: 'Orders', icon: <ShoppingBagIcon /> },
-  { label: 'Products', icon: <InventoryIcon /> },
-  { label: 'Customers', icon: <PeopleIcon /> },
-  { label: 'Settings', icon: <SettingsIcon /> },
+  { label: 'Overview', to: '/', icon: <DashboardIcon /> },
+  { label: 'Orders', to: '/orders', icon: <ShoppingBagIcon /> },
+  { label: 'Products', to: '/products', icon: <InventoryIcon /> },
+  { label: 'Customers', to: '/customers', icon: <PeopleIcon /> },
+  { label: 'Settings', to: '/settings', icon: <SettingsIcon /> },
 ];
 
 const paperSx = {
@@ -32,18 +32,22 @@ const paperSx = {
   border: 0,
 };
 
-function NavContent({ active, onSelect }) {
+function NavContent({ onNavigate }) {
+  const { pathname } = useLocation();
+
   return (
     <Box>
       <Typography variant="h6" sx={{ px: 3, py: 2.5 }}>
         Harbor Shop
       </Typography>
       <List sx={{ px: 1.5 }}>
-        {navItems.map(({ label, icon }) => (
+        {navItems.map(({ label, to, icon }) => (
           <ListItemButton
-            key={label}
-            selected={active === label}
-            onClick={() => onSelect(label)}
+            key={to}
+            component={NavLink}
+            to={to}
+            selected={pathname === to}
+            onClick={onNavigate}
             sx={{
               borderRadius: 1,
               mb: 0.5,
@@ -61,14 +65,7 @@ function NavContent({ active, onSelect }) {
 }
 
 export default function Sidebar({ mobileOpen, onClose }) {
-  const [active, setActive] = useState('Overview');
-
-  const handleSelect = (label) => {
-    setActive(label);
-    onClose();
-  };
-
-  const content = <NavContent active={active} onSelect={handleSelect} />;
+  const content = <NavContent onNavigate={onClose} />;
 
   return (
     <Box component="nav" aria-label="Main navigation" sx={{ width: { md: DRAWER_WIDTH }, flexShrink: { md: 0 } }}>

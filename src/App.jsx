@@ -1,60 +1,22 @@
-import { useState } from 'react';
-import { Box, Container, Typography } from '@mui/material';
-import PaidIcon from '@mui/icons-material/Paid';
-import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
-import PeopleIcon from '@mui/icons-material/People';
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import Sidebar from './components/Sidebar.jsx';
-import Header from './components/Header.jsx';
-import StatCard from './components/StatCard.jsx';
-import OrdersTable from './components/OrdersTable.jsx';
-import { orders } from './data/orders.js';
-
-const stats = [
-  { title: 'Revenue this month', value: '$48,290', change: 12.4, icon: <PaidIcon /> },
-  { title: 'Orders', value: '1,284', change: 8.1, icon: <ShoppingBagIcon /> },
-  { title: 'New customers', value: '312', change: -3.2, icon: <PeopleIcon /> },
-  { title: 'Shipped on time', value: '96%', change: 1.5, icon: <LocalShippingIcon /> },
-];
+import { Navigate, Route, Routes } from 'react-router-dom';
+import Layout from './components/Layout.jsx';
+import Overview from './pages/Overview.jsx';
+import Orders from './pages/Orders.jsx';
+import Products from './pages/Products.jsx';
+import Customers from './pages/Customers.jsx';
+import Settings from './pages/Settings.jsx';
 
 export default function App() {
-  const [mobileOpen, setMobileOpen] = useState(false);
-
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-      <Sidebar mobileOpen={mobileOpen} onClose={() => setMobileOpen(false)} />
-
-      <Box component="main" sx={{ flexGrow: 1, minWidth: 0 }}>
-        <Header onMenuClick={() => setMobileOpen(true)} />
-
-        <Container maxWidth="xl" sx={{ py: { xs: 2, md: 4 } }}>
-          <Typography variant="h5" component="h1" sx={{ mb: 0.5 }}>
-            Overview
-          </Typography>
-          <Typography color="text.secondary" sx={{ mb: 3 }}>
-            How your shop is doing this month.
-          </Typography>
-
-          <Box
-            sx={{
-              display: 'grid',
-              gap: 2,
-              mb: 3,
-              gridTemplateColumns: {
-                xs: '1fr',
-                sm: 'repeat(2, 1fr)',
-                lg: 'repeat(4, 1fr)',
-              },
-            }}
-          >
-            {stats.map((s) => (
-              <StatCard key={s.title} {...s} />
-            ))}
-          </Box>
-
-          <OrdersTable rows={orders} />
-        </Container>
-      </Box>
-    </Box>
+    <Routes>
+      <Route element={<Layout />}>
+        <Route index element={<Overview />} />
+        <Route path="orders" element={<Orders />} />
+        <Route path="products" element={<Products />} />
+        <Route path="customers" element={<Customers />} />
+        <Route path="settings" element={<Settings />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Route>
+    </Routes>
   );
 }
