@@ -1,122 +1,60 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import { Box, Container, Typography } from '@mui/material';
+import PaidIcon from '@mui/icons-material/Paid';
+import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
+import PeopleIcon from '@mui/icons-material/People';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import Sidebar from './components/Sidebar.jsx';
+import Header from './components/Header.jsx';
+import StatCard from './components/StatCard.jsx';
+import OrdersTable from './components/OrdersTable.jsx';
+import { orders } from './data/orders.js';
 
-function App() {
-  const [count, setCount] = useState(0)
+const stats = [
+  { title: 'Revenue this month', value: '$48,290', change: 12.4, icon: <PaidIcon /> },
+  { title: 'Orders', value: '1,284', change: 8.1, icon: <ShoppingBagIcon /> },
+  { title: 'New customers', value: '312', change: -3.2, icon: <PeopleIcon /> },
+  { title: 'Shipped on time', value: '96%', change: 1.5, icon: <LocalShippingIcon /> },
+];
+
+export default function App() {
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+      <Sidebar mobileOpen={mobileOpen} onClose={() => setMobileOpen(false)} />
 
-      <div className="ticks"></div>
+      <Box component="main" sx={{ flexGrow: 1, minWidth: 0 }}>
+        <Header onMenuClick={() => setMobileOpen(true)} />
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+        <Container maxWidth="xl" sx={{ py: { xs: 2, md: 4 } }}>
+          <Typography variant="h5" component="h1" sx={{ mb: 0.5 }}>
+            Overview
+          </Typography>
+          <Typography color="text.secondary" sx={{ mb: 3 }}>
+            How your shop is doing this month.
+          </Typography>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+          <Box
+            sx={{
+              display: 'grid',
+              gap: 2,
+              mb: 3,
+              gridTemplateColumns: {
+                xs: '1fr',
+                sm: 'repeat(2, 1fr)',
+                lg: 'repeat(4, 1fr)',
+              },
+            }}
+          >
+            {stats.map((s) => (
+              <StatCard key={s.title} {...s} />
+            ))}
+          </Box>
+
+          <OrdersTable rows={orders} />
+        </Container>
+      </Box>
+    </Box>
+  );
 }
-
-export default App
